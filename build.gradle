@@ -1,0 +1,97 @@
+plugins {
+    id 'eclipse'
+    id 'idea'
+    id 'maven-publish'
+    id 'net.minecraftforge.gradle' version '[6.0.16,6.2)'
+}
+
+version = mod_version
+group = mod_group
+
+base {
+    archivesName = mod_id
+}
+
+java.toolchain.languageVersion = JavaLanguageVersion.of(20)
+
+tasks.named('processResources', ProcessResources) {
+    duplicatesStrategy = DuplicatesStrategy.INCLUDE
+}
+
+minecraft {
+    mappings channel: 'official', version: minecraft_version
+    copyIdeResources = true
+
+    runs {
+        configureEach {
+            workingDirectory project.file('run')
+            property 'forge.logging.markers', 'REGISTRIES'
+            property 'forge.logging.console.level', 'debug'
+            mods {
+                "${mod_id}" {
+                    source sourceSets.main
+                }
+            }
+        }
+
+        client {
+            workingDirectory project.file('run-client')
+            property 'forge.enabledGameTest', 'false'
+        }
+
+        server {
+            workingDirectory project.file('run-server')
+            property 'forge.enabledGameTest', 'false'
+            args '--nogui'
+        }
+    }
+}
+
+sourceSets.main.resources.srcDirs += ['src/main/resources']
+sourceSets.main.java.srcDirs += ['src/main/java']
+
+repositories {
+    maven { url = 'https://maven.minecraftforge.net/' }
+}
+
+dependencies {
+    minecraft "net.minecraftforge:forge:${minecraft_version}-${forge_version}"
+}
+
+tasks.named('processResources', ProcessResources).configure {
+    var replaceProperties = [
+            minecraft_version   : minecraft_version,
+            forge_version       : forge_version,
+            mod_id              : mod_id,
+            mod_name            : mod_name,
+            mod_version         : mod_version,
+    ]
+    inputs.properties replaceProperties
+    filesMatching(['META-INF/mods.toml', 'pack.mcmeta']) {
+        expand replaceProperties + [project: project]
+    }
+}
+
+tasks.named('jar', Jar).configure {
+    duplicatesStrategy = DuplicatesStrategy.EXCLUDE
+    manifest {
+        attributes([
+                'Specification-Title'     : mod_id,
+                'Specification-Vendor'     : 'tzdwindows 7',
+                'Specification-Version'   : '1',
+                'Implementation-Title'   : project.name,
+                'Implementation-Version'  : project.jar.archiveVersion,
+                'Implementation-Vendor'   : 'tzdwindows 7',
+                'Automatic-Module-Name'   : mod_id
+        ])
+    }
+    from(sourceSets.main.resources) { include '**/*' }
+}
+
+publishing {
+    publications {
+        register('mavenJava', MavenPublication) {
+            artifact jar
+        }
+    }
+}

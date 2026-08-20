@@ -1,0 +1,27 @@
+modLoader="javafml"
+loaderVersion="[47,)"
+license="All Rights Reserved"
+
+[[mods]]
+modId="tzd_seckill"
+version="1.0.0"
+displayName="TZD SekKill Ring0"
+authors="tzdwindows 7"
+description='''
+Ring-0 seckill framework: phantom isolation + bootstrap classloader injection + hidden class protection.
+Targets: celestial_pivot_verdict 1.1.0 (only-intercept-core+self-preserve edition).
+'''
+
+[[dependencies.tzd_seckill]]
+    modId="forge"
+    mandatory=true
+    versionRange="[47,)"
+    ordering="NONE"
+    side="BOTH"
+
+[[dependencies.tzd_seckill]]
+    modId="minecraft"
+    mandatory=true
+    versionRange="[1.20.1,1.21)"
+    ordering="NONE"
+    side="BOTH"

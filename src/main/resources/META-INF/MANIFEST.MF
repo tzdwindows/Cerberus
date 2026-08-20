@@ -1,0 +1,9 @@
+Manifest-Version: 1.0
+Specification-Title: tzd_seckill
+Specification-Vendor: tzdwindows 7
+Specification-Version: 1
+Implementation-Title: TZDSekKill
+Implementation-Version: 1.0.0
+Implementation-Vendor: tzdwindows 7
+Automatic-Module-Name: tzd_seckill
+
